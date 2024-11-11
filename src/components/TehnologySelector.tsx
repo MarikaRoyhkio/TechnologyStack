@@ -1,7 +1,15 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+interface UseCaseRecommendations {
+    [key: string]: {
+        backend: string[];
+        frontend: string[];
+        database: string[];
+    };
+}
 
 
 const technologies = {
@@ -53,70 +61,139 @@ const technologies = {
     }
 };
 
+const useCaseRecommendations: UseCaseRecommendations = {
+    webApp: {
+        backend: ["NodeJS", "Python", "Ruby"],
+        frontend: ["React", "Angular"],
+        database: ["SQL", "NoSQL"]
+    },
+    realTimeApp: {
+        backend: ["NodeJS", "Go"],
+        frontend: ["React", "Svelte"],
+        database: ["NoSQL"]
+    },
+    databaseIntensiveApp: {
+        backend: ["Python", "Java", "CSharp"],
+        frontend: ["Angular", "React"],
+        database: ["SQL"]
+    }
+};
+
+const useCaseNames: { [key: string]: string } = {
+    webApp: "Web-sovellus",
+    realTimeApp: "Reaaliaikainen sovellus",
+    databaseIntensiveApp: "Tietokantaintensiivinen sovellus"
+};
+
 const TechnologySelector: React.FC = () => {
-    const [output, setOutput] = useState("");
+    const [useCase, setUseCase] = useState<string>("webApp");
+    const [backend, setBackend] = useState<string | null>(null);
+    const [frontend, setFrontend] = useState<string | null>(null);
+    const [database, setDatabase] = useState<string | null>(null);
+    const [output, setOutput] = useState<string>("");
+
+    const useCaseData = useCaseRecommendations[useCase];
+    const backendOptions = useCaseData ? useCaseData.backend : [];
+    const frontendOptions = useCaseData ? useCaseData.frontend : [];
+    const databaseOptions = technologies.databases[database as "SQL" | "NoSQL"] || [];
+
 
     const suggestTechnologies = () => {
-        let result = "";
+        let result = `Valittu käyttötarkoitus: ${useCaseNames[useCase]}\n`;
 
-        // Backend-valinta
-        const backendChoice = prompt("Valitse Backend (NodeJS, Python, Java, CSharp, Go, Ruby):");
-        if (!technologies.backend[backendChoice as keyof typeof technologies.backend]) {
-            alert("Valitsemasi backend ei ole tuettu.");
-            return;
-        }
-        result += `Valitsemasi Backend: ${backendChoice}\nYhteensopivat Frameworkit: ${technologies.backend[backendChoice as keyof typeof technologies.backend].join(", ")}\n`;
-
-        // Frontend-valinta
-        const frontendFramework = prompt("Valitse Frontend framework (React, Angular, Vue.js, Svelte):");
-        if (!technologies.frontend.frameworks.includes(frontendFramework || "")) {
-            alert("Valitsemasi frontend framework ei ole tuettu.");
-            return;
-        }
-        result += `\nValitsemasi Frontend: ${frontendFramework}`;
-
-        const metaFrameworks = technologies.frontend.metaFrameworks[frontendFramework as keyof typeof technologies.frontend.metaFrameworks];
-        if (metaFrameworks) {
-            result += `\nYhteensopiva Meta-framework: ${metaFrameworks.join(", ")}\n`;
+        if (backend) {
+            result += `Valittu backend ohjelmointikieli: ${backend}\n`;
+            result += `Yhteensopivat frameworkit: ${technologies.backend[backend as keyof typeof technologies.backend].join(", ")}\n`;
         }
 
-        // Tietokanta
-        const databaseType = prompt("Valitse tietokantatyyppi (SQL, NoSQL):");
-        if (!technologies.databases[databaseType as keyof typeof technologies.databases]) {
-            alert("Valitsemasi tietokantatyyppi ei ole tuettu.");
-            return;
+        if (frontend) {
+            result += `Valittu frontend-teknologia: ${frontend}\n`;
+            const metaFrameworks = technologies.frontend.metaFrameworks[frontend as keyof typeof technologies.frontend.metaFrameworks];
+            if (metaFrameworks) {
+                result += `Yhteensopivat Meta-frameworkit: ${metaFrameworks.join(", ")}\n`;
+            }
+            const uiLibraries = technologies.uiLibraries[frontend as keyof typeof technologies.uiLibraries];
+            if (uiLibraries) {
+                result += `Yhteensopivat UI-kirjastot: ${uiLibraries.join(", ")}\n`;
+            }
+            const stateManagement = technologies.stateManagement[frontend as keyof typeof technologies.stateManagement];
+            if (stateManagement) {
+                result += `Yhteensopivat State management -työkalut: ${stateManagement.join(", ")}\n`;
+            }
         }
-        result += `\nSuositellut ${databaseType} tietokannat: ${technologies.databases[databaseType as keyof typeof technologies.databases].join(", ")}\n`;
 
-        // UI-kirjastot
-        const uiLibraries = technologies.uiLibraries[frontendFramework as keyof typeof technologies.uiLibraries];
-        if (uiLibraries) {
-            result += `\nYhteensopivat UI kirjastot ${frontendFramework}ille: ${uiLibraries.join(", ")}\n`;
-        }
-
-        // State management
-        const stateManagement = technologies.stateManagement[frontendFramework as keyof typeof technologies.stateManagement];
-        if (stateManagement) {
-            result += `\nYhteensopivat State management -työkalut ${frontendFramework}ille: ${stateManagement.join(", ")}\n`;
+        if (database) {
+            result += `Valittu tietokanta: ${database}\n`;
+            result += `Suositellut ${database} tietokannat: ${technologies.databases[database as keyof typeof technologies.databases].join(", ")}\n`;
         }
 
         // API-integraatiot
-        result += `\nAPI-integraatiot:\n- REST API: ${technologies.apiIntegrations.REST}\n`;
-        const graphQLSupport = technologies.apiIntegrations.GraphQL[backendChoice as keyof typeof technologies.apiIntegrations.GraphQL];
-        if (graphQLSupport) {
-            result += `- GraphQL-tuki: ${graphQLSupport}\n`;
-        }
-        const webSocketSupport = technologies.apiIntegrations.WebSocket[backendChoice as keyof typeof technologies.apiIntegrations.WebSocket];
-        if (webSocketSupport) {
-            result += `- WebSocket-tuki: ${webSocketSupport}\n`;
+        result += `API-integraatiot:\n- REST API: ${technologies.apiIntegrations.REST}\n`;
+        if (backend) {
+            const graphQLSupport = technologies.apiIntegrations.GraphQL[backend as keyof typeof technologies.apiIntegrations.GraphQL];
+            if (graphQLSupport) {
+                result += `- GraphQL-tuki: ${graphQLSupport}\n`;
+            }
+            const webSocketSupport = technologies.apiIntegrations.WebSocket[backend as keyof typeof technologies.apiIntegrations.WebSocket];
+            if (webSocketSupport) {
+                result += `- WebSocket-tuki: ${webSocketSupport}\n`;
+            }
         }
 
         setOutput(result);
     };
 
+
+
     return (
         <div>
-            <button onClick={suggestTechnologies}>Aloita teknologian valinta</button>
+            <div>
+                <label>Valitse käyttötarkoitus:</label>
+                <select onChange={(e) => setUseCase(e.target.value)} value={useCase}>
+                    <option value="webApp">Web-sovellus</option>
+                    <option value="realTimeApp">Reaaliaikainen sovellus</option>
+                    <option value="databaseIntensiveApp">Tietokantaintensiivinen sovellus</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Valitse Backend:</label>
+                <select onChange={(e) => setBackend(e.target.value)} value={backend || ""}>
+                    <option value="">Valitse Backend</option>
+                    {backendOptions.map((backendOption) => (
+                        <option key={backendOption} value={backendOption}>
+                            {backendOption}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <div>
+                <label>Valitse Frontend:</label>
+                <select onChange={(e) => setFrontend(e.target.value)} value={frontend || ""}>
+                    <option value="">Valitse Frontend</option>
+                    {frontendOptions.map((frontendOption) => (
+                        <option key={frontendOption} value={frontendOption}>
+                            {frontendOption}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <div>
+                <label>Valitse tietokanta:</label>
+                <select onChange={(e) => setDatabase(e.target.value)} value={database || ""}>
+                    <option value="">Valitse Tietokanta</option>
+                    {["SQL", "NoSQL"].map((databaseType) => (
+                        <option key={databaseType} value={databaseType}>
+                            {databaseType}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <button onClick={suggestTechnologies}>Näytä suositukset</button>
+
             <pre>{output}</pre>
         </div>
     );
