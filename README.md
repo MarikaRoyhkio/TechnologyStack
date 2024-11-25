@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Teknologian valintatyökalu
 
-## Getting Started
+### 📝 Yleiskuvaus
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Tämä projekti on teknologian valintatyökalu, joka on kehitetty tukemaan käyttäjiä valitsemaan oikeat teknologiat suunnittelemaansa projektiin. Työkalu analysoi käyttötarkoituksen, osaamistason ja vaikeustason perusteella suosituksia backend-, frontend- ja tietokantateknologioista.
+
+### 🚀 Ominaisuudet
+
+* Suosituksia käyttäjän projektin tarpeiden mukaan.
+*	Vaihtoehtoinen ehdotus, jos käyttäjän osaamistaso ei vastaa ensisijaista suositusta.
+*	Käyttäjäystävällinen käyttöliittymä ja dynaaminen päivitys suosituksille.
+*	Varoitukset teknologioista, jotka eivät sovi valittuun käyttötarkoitukseen.
+
+### 🛠️ Käytetyt teknologiat
+
+Tässä projektissa käytetyt teknologiat ja niiden dokumentaatio:
+*	Next.js / React: Käyttöliittymän rakentamiseen. [React-opas](https://react.dev/) / [Next.js opas](https://nextjs.org/docs)
+*	TypeScript: Tyypitetty JavaScript-kieli. [TypeScript-opas](https://www.typescriptlang.org/docs/)
+*	CSS: Tyylitiedostot visuaaliseen ilmeeseen.
+*	Node.js: Palvelinpuolen logiikka ja riippuvuuksien hallinta. [Node.js-opas](https://nodejs.org/docs/latest/api/)
+
+### 📂 Projektin rakenne 
+
+```
+  src/
+    ├── components/
+    │   ├── Suggestions.tsx       # Suositusten näyttäminen
+    │   ├── Warnings.tsx          # Varoitusten näyttäminen
+    │   ├── TechnologySelector.tsx # Teknologian valintatyökalu
+    ├── styles/
+    │   ├── Global.css            # Tyylitiedosto
+    ├── technologies.ts           # Teknologioiden määrittely ja yhteensopivuudet
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 🔧 Asennusohjeet
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1.	Kloonaa repository ja siirry kansioon
+```
+  git clone <repository-url>
+  cd <repository-name>
+```
+2.	Asenna riippuvuudet
+```
+  npm install
+```
+3.	Käynnistä sovellus
+``` 
+  npm start
+```
+4.	Avaa selain ja navigoi osoitteeseen
+```
+  http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 📘 Käyttöohjeet
 
-## Learn More
+1.	Valitse projektin käyttötarkoitus pudotusvalikosta (esim. Verkkosovellus).
+2.	Aseta osaamistasosi ja suunnitellun projektin haluttu vaikeustaso.
+3.	Valitse mahdollisesti jo etukäteen osaamasi teknologiat valintalaatikoista.
+4.	Tarkastele ehdotuksia ja varoituksia.
 
-To learn more about Next.js, take a look at the following resources:
+### 📄 Dokumentaatio
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Kaikki komponentit on kattavasti kommentoitu koodissa. Jokainen tiedosto sisältää selityksiä siitä, mitä funktiot ja muuttujat tekevät, sekä miten komponentit toimivat keskenään.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 📧 Tuki
 
-## Deploy on Vercel
+Jos kohtaat ongelmia, voit ottaa yhteyttä projektin omistajaan.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
